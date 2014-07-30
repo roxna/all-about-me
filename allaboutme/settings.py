@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -69,10 +69,10 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook', 'twitter')
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
 
-TWITTER_CONSUMER_KEY         = ''
-TWITTER_CONSUMER_SECRET      = ''
-TWITTER_ACCESS_TOKEN = ''
-TWITTER_ACCESS_SECRET = ''
+TWITTER_CONSUMER_KEY         = 'mmtEVhTWlOrMTS7YfPbvjo4q0'
+TWITTER_CONSUMER_SECRET      = 'jTObCYoX7awJuExElzthcgkwUlpwisaLMjO8IxSzNdWYyAElYT'
+TWITTER_ACCESS_TOKEN = '2678511649-kDtbSBwWtvVP48Ia7l4WjB7Dy5iXjlAYWFFBltB'
+TWITTER_ACCESS_SECRET = 'yeXm8arwfXDHlutTO8M52A1gbIp9Fs6sVjEPxuH8GnV3c'
 
 # FACEBOOK_APP_ID              = ''
 # FACEBOOK_API_SECRET          = ''
@@ -112,8 +112,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
-
 AUTH_USER_MODEL = 'news.Person'
 SOCIAL_AUTH_USER_MODEL = 'news.Person'
 
@@ -130,3 +128,21 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
+
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
