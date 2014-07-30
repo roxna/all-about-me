@@ -1,0 +1,48 @@
+
+#homeBody{
+    background-color: grey;
+    background: url(../img/home_background2.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+#home-header{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    padding: 20px 0 0 20px;
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 70px;
+    color: #ffffff;
+}
+
+#home-subheader{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: -20px;
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 30px;
+    color: white;
+}
+
+.news-read-more{
+    margin-top: -30px;
+    margin-right: 10px;
+    float: right;
+}
+
+#sourceLogo{
+    width: 20%;
+    height: 20%;
+    float: right;
+    margin-right: 15px;
+    margin-top: 10px;
+}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header panel-heading"> Profile </h1>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    Preferences
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <form method="post" name="" action="">
+                                                {% csrf_token %}
+                                                    <div class="form-inline">
+                                                        {{ form.label_tag }}
+                                                        {{ form.help_text }}
+                                                        <div class="checkbox-inline">
+                                                            {{ form.as_p }}
+                                                        </div>
+                                                    </div>
+                                                    <input type="submit" class="btn btn-success" value="Save" name="Preferences">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+{% endblock %}

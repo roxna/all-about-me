@@ -1,0 +1,30 @@
+
+{#    <div id="page-wrapper">#}
+{#        <div class="row">#}
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div id="pageBody">
+                    <div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>
+                            Tweets from {{ screen_name }}
+                        </div>
+                    </div>
+                    <ul class="chat">
+                        {% for tweet in tweets %}
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left">
+                                    <i class="fa fa-twitter"></i>
+                                </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">{{ tweet.screen_name }}</strong>
+                                    </div>
+                                    <p>{{ tweet.text }}</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+{#        </div>#}
+{#    </div>#}

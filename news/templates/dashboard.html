@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-xs-3 col-md-11 col-lg-11">
+
+{#                Replaces all content within #sourceLogo, #pageHeader, #search on ajax call#}
+                <img src="" id="sourceLogo" class="img-responsive"/>
+                <h1 class="page-header panel-heading" id="pageHeader">{{ header }}</h1>
+                <div id="search"></div>
+            </div>
+
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+{#                Replaces all content within #pagebody on ajax call#}
+                <div class="panel-body" id="pageBody">
+                     <ul class="timeline">
+                        <li>
+                            <div class="timeline-badge primary"><i class="fa fa-twitter"></i>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Tweets from {{ screen_name }}</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    {% for tweet in tweets %}
+                                    <p><i class="fa fa-twitter"></i>{{ tweet.text }}</p><br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+{#                        <li class="timeline-inverted">#}
+{#                            <div class="timeline-badge success"><i class="fa fa-hacker-news"></i>#}
+{#                            </div>#}
+{#                            <div class="timeline-panel">#}
+{#                                <div class="timeline-heading">#}
+{#                                    <h4 class="timeline-title">News</h4>#}
+{#                                </div>#}
+{#                                <div class="timeline-body">#}
+{#                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <div class="timeline-badge danger"><i class="fa fa-video-camera"></i>#}
+{#                            </div>#}
+{#                            <div class="timeline-panel">#}
+{#                                <div class="timeline-heading">#}
+{#                                    <h4 class="timeline-title">XKCD Comic of the day!</h4>#}
+{#                                </div>#}
+{#                                <div class="timeline-body">#}
+{#                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>#}
+{#                                </div><br>#}
+{#                                <button type="button" class="btn btn-primary">Action</button>#}
+{#                            </div>#}
+{#                        </li>#}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header panel-heading"> Social Log Ins</h1>
+           </div>
+
+            <div style="margin-left: 25px">
+                <div class="col-xs-7 col-lg-7">
+                    <p>What's your twitter handle? <em>(Without the @)</em></p>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <form method="post" name="TwitterForm">
+                                {% csrf_token %}
+{#                                <div class="input-group-addon">@</div>#}
+                                {{ form }}
+                                <i class="fa fa-twitter" style="width:16px; height:20px"></i>
+{#                                <input class="form-control" type="text" placeholder="Enter Twitter Handle">#}
+                                <input type="submit" class="btn btn-info" value="Save">
+                            </form>
+                        </div><br>
+                    </div>
+                </div>
+
+{#                <br /><br/>#}
+{#                <div class="btn-group">#}
+{#                    <a class='btn btn-info disabled'><i class="fa fa-linkedin" style="width:16px; height:20px"></i></a>#}
+{#                    <a class='btn btn-info ' href="{% url 'socialauth_begin' 'linkedin' %}" style="width:12em"> Sign in with LinkedIn</a>#}
+{#                </div>#}
+             </div>
+        </div>
+    </div>
+
+{% endblock %}
