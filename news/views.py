@@ -1,6 +1,6 @@
 import json
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
@@ -19,8 +19,11 @@ def home(request):
     if request.method == "POST":
         register_form = RegistrationForm(request.POST)
         if register_form.is_valid():
-            if register_form.save():
-                return redirect("preferences")
+            new_user = register_form.save()
+            new_user = authenticate(username=request.POST['username'],
+                                    password=request.POST['password1'])
+            login(request, new_user)
+            return redirect("/preferences/")
 
     register_form = RegistrationForm()
     return render(request, 'home.html', {'register_form': register_form})

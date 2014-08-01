@@ -22,10 +22,11 @@ $(document).ready(function() {
             '<h4 class="panel-title" id="title" data-title="'+content.title+'">'+content.title+'</h4><br>' +
             '<div id="description" data-description="'+content.description+'>'+content.description+'</div>' +
             '<video width="640" height="480" controls autoplay>'+
-                '<source id="url" data-url="'+content.url+'" src="'+content.url+'"/>'+
+                '<source id="url" data-url="'+content.url+'" src="'+content.url+'"/> <em>Your browser doesn\'t support video</em>'+
             '</video>'
             );
         }
+
 
     // CHANGE FAVORITES BUTTON ON CLICK //
     $(document).on('click', '.favorite', function(){
@@ -147,7 +148,6 @@ $(document).ready(function() {
         );
     }
 
-
     $.ajax({
         url: "http://dynamic.xkcd.com/api-0/jsonp/comic/",
         type: "GET",
@@ -167,6 +167,7 @@ $(document).ready(function() {
         var comicNum = Math.floor((Math.random() * 1500) + 1);
         $.ajax({
             url: "http://dynamic.xkcd.com/api-0/jsonp/comic/"+comicNum,
+//            url: "http://dynamic.xkcd.com/random/comic/",
             type: "GET",
             dataType: "jsonp",
             success: function (response) {
@@ -199,8 +200,6 @@ $(document).ready(function() {
                 '</p>'
         );
     }
-
-
 
     $.ajax({
         url: "http://vimeo.com/api/v2/video/"+50+".json",
