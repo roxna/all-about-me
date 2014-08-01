@@ -9,7 +9,7 @@
 
 {#                Replaces all content within #sourceLogo, #pageHeader, #search on ajax call#}
                 <img src="" id="sourceLogo" class="img-responsive"/>
-                <h1 class="page-header panel-heading" id="pageHeader">{{ header }}</h1>
+                <h1 class="page-header panel-heading" id="pageHeader" data-source="">{{ header }}</h1>
                 <div id="search"></div>
             </div>
 
@@ -32,31 +32,37 @@
                                 </div>
                             </div>
                         </li>
-{#                        <li class="timeline-inverted">#}
-{#                            <div class="timeline-badge success"><i class="fa fa-hacker-news"></i>#}
-{#                            </div>#}
-{#                            <div class="timeline-panel">#}
-{#                                <div class="timeline-heading">#}
-{#                                    <h4 class="timeline-title">News</h4>#}
-{#                                </div>#}
-{#                                <div class="timeline-body">#}
-{#                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </li>#}
-{#                        <li>#}
-{#                            <div class="timeline-badge danger"><i class="fa fa-video-camera"></i>#}
-{#                            </div>#}
-{#                            <div class="timeline-panel">#}
-{#                                <div class="timeline-heading">#}
-{#                                    <h4 class="timeline-title">XKCD Comic of the day!</h4>#}
-{#                                </div>#}
-{#                                <div class="timeline-body">#}
-{#                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>#}
-{#                                </div><br>#}
-{#                                <button type="button" class="btn btn-primary">Action</button>#}
-{#                            </div>#}
-{#                        </li>#}
+                        <li class="timeline-inverted">
+                            <div class="timeline-badge success"><i class="fa fa-hacker-news"></i>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Favorite News Articles</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    {% for article in news|slice:"3" %}
+                                        <p><strong>{{ article.title }}</strong>
+                                        <p><em>{{ article.source}} &nbsp; &nbsp; <a href="{{ article.web_url }}">Read more</a></em></p>
+                                        <p>{{ article.abstract}}</p><br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="timeline-badge danger"><i class="fa fa-video-camera"></i>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Entertainment you enjoy</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    {% for video in entertainment|slice:"3" %}
+                                        <p><strong>{{ video.title }}</strong>
+                                        <p><em>{{ video.source}} &nbsp; &nbsp; <a href="{{ video.url }}">Link there</a></em></p>
+                                        <img id="url" data-url="{{ video.url }}" src="{{ video.url }}" style="width: 100%;"/>
+                                    {% endfor %}
+                            </div>
+                        </li>
 
                     </ul>
                 </div>

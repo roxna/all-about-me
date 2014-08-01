@@ -7,13 +7,14 @@ $(document).ready(function() {
 
 
     $('#twitter').on('click', function(){
-        $('#pageHeader').text("Twitter");
+        $('#pageHeader').text("");
+//        $('#pageHeader').text("Twitter");
         $('#pageBody').html("");
         $('#sourceLogo').attr('src', '/static/img/twitter.jpeg');
-        $('#search').html('<div class="form-group input-group">'+
+        $('#search').html('<div class="form-group input-group" id="twitter-search-bar">'+
                             '<span class="input-group-addon">@</span>'+
                              "<input type='text' class='form-control' id='searchTerm' style='width: 300px' placeholder='Enter twitter handle to follow'></input>"+
-                             "<button id='searchTwitter' style='margin-left: 5px; display: inline-block;' class='btn btn-primary' type='submit'>Show me the tweets</button>"+
+                             "<button id='searchTwitter' style='margin-left: 5px; display: inline-block;' class='btn btn-success' type='submit'>Show me the tweets</button>"+
                           '</div>');
         $.ajax({
             url: '/twitter/',

@@ -12,22 +12,25 @@ $(document).ready(function(){
 //    var nytimes_api_key = "6bdaaf4dc90f357bd0e3eec43415f288:15:69599771";
 
     function loadHTML(newsList){
+        $('#pageHeader').text("");
         $('#pageBody').html("");
         $('#search').html("");
 
         for (var i=0; i<newsList.length; i++){
             $('#pageBody').append(
                 '<div class="panel-group" id="accordion">'+
-                    '<div class="panel panel-default">' +
+                    '<div class="panel panel-default" id="newsPanel">' +
                         '<div class="panel-heading">'+
                             '<h4 class="panel-title">' +
-                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+newsList[i].title+'</a>'+
+                                '<a data-toggle="collapse" data-parent="#accordion" id="title" data-title="'+newsList[i].title+'" href="#collapse'+i+'">'+newsList[i].title+'</a>'+
+                                '<img id="favorite-icon-news" class="not_favorite" src="/static/img/non-favorite.jpeg"/>'+
+                                '<a class="news-more-options" id="web_url" data-web_url="'+newsList[i].web_url+'" href="'+newsList[i].web_url+'">Read more</a>'+
+                                '<a class="news-more-options" href="mailto:?subject=Interesting Article">Email</a>'+
                             '</h4>' +
                         '</div>'+
                         '<div id="collapse'+i+'" class="panel-collapse collapse in">'+
 //                               '<img src="'+newsList[i].image_url+' class="news-images"><br>'+
-                               '<div class="panel-body">'+newsList[i].abstract+'</div><br>'+
-                               '<a class="news-read-more" href="'+newsList[i].web_url+'">Read more</a>'+
+                               '<div class="panel-body" id="abstract" data-abstract="'+newsList[i].abstract+'">'+newsList[i].abstract+'</div><br>'+
                         '</div>'+
                     '</div>'+
                 '</div>'
@@ -35,9 +38,104 @@ $(document).ready(function(){
         }
     }
 
+    // CHANGE FAVORITES BUTTON ON CLICK //
+    $(document).on('click', '#favorite-icon-news', function(){
+       if ($(this).attr('src') == '/static/img/favorite.jpeg'){
+           $(this).attr('src', '/static/img/non-favorite.jpeg');
+       }
+       else{
+           $(this).attr('src', '/static/img/favorite.jpeg');
+       }
+    });
+
+
+    // ADDS / REMOVES A NEWS ARTICLE FROM FAVORITES ON CLICK ON DASHBOARD PAGES//
+    $(document).on('click', '#favorite-icon-news', function(){
+        favorite_news = {};
+        favorite_news.title = $(this).siblings('#title').data('title');
+        favorite_news.web_url = $(this).siblings('#web_url').data('web_url');
+        favorite_news.abstract = $(this).parents("#newsPanel").find('#abstract').data('abstract');
+        favorite_news.source = $(this).parents('.row').find('#pageHeader').data('source');
+        favorite_news.origin = '/dashboard/';
+        console.log(favorite_news);
+        if($(this).hasClass("not_favorite")){
+            $.ajax({
+                url: "/add_favorite_news/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_news),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+        }
+        if($(this).hasClass("favorite")){
+            $.ajax({
+                url: "/remove_favorite_news/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_news),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+
+        }
+        $(this).toggleClass("favorite").toggleClass("not_favorite");
+    });
+
+
+    // ADDS / REMOVES A NEWS ARTICLE FROM FAVORITES ON CLICK ON FAVORITES PAGE //
+    $(document).on('click', '#favorite-icon-news-saved', function(){
+        favorite_news = {};
+        favorite_news.title = $(this).siblings('#title').data('title');
+        favorite_news.web_url = $(this).parents('#favoritesBody').find('#web_url').data('web_url');
+        favorite_news.abstract = $(this).parents('#favoritesBody').find('#abstract').data('abstract');
+        favorite_news.source = $(this).parents('#favoritesBody').find('#source').data('source');
+        favorite_news.origin = '/dashboard/';
+        console.log(favorite_news);
+        if($(this).hasClass("not_favorite")){
+            $.ajax({
+                url: "/add_favorite_news/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_news),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+        }
+        if($(this).hasClass("favorite")){
+            $.ajax({
+                url: "/remove_favorite_news/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_news),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+
+        }
+        $(this).toggleClass("favorite").toggleClass("not_favorite");
+    });
+
+
+    // AJAX REQUESTS FOR ALL NEWS SITES //
 
     // ESPN //
-
     function parseESPNData(news_articles){
         var newsList = [];
         for (var i = 0; i < news_articles.headlines.length; i++) {
@@ -51,7 +149,7 @@ $(document).ready(function(){
                 newsArticle.image_url = article.images[0].url;
                 newsList.push(newsArticle);
             }
-        $('#pageHeader').text("").text("ESPN");
+        $('#pageHeader').data("source", "ESPN");
         $('#sourceLogo').attr('src', '/static/img/ESPN.jpeg');
         loadHTML(newsList);
     }
@@ -73,7 +171,6 @@ $(document).ready(function(){
 
 
     // NPR //
-
     function parseNPRData(news_articles){
         var newsList = [];
         for (var i = 0; i < news_articles.list.story.length; i++) {
@@ -87,7 +184,7 @@ $(document).ready(function(){
 //                newsArticle.image_url = article.link[0].$text;
                 newsList.push(newsArticle);
             }
-        $('#pageHeader').text("").text("NPR");
+        $('#pageHeader').data("source", "NPR");
         $('#sourceLogo').attr('src', '/static/img/npr.jpg');
         loadHTML(newsList);
     }
@@ -109,7 +206,6 @@ $(document).ready(function(){
 
 
     // USA TODAY //
-
     function parseUSAData(news_articles){
         var newsList = [];
         for (var i = 0; i < news_articles.stories.length; i++) {
@@ -123,7 +219,7 @@ $(document).ready(function(){
 //                newsArticle.image_url = article.images[0].url;
                 newsList.push(newsArticle);
             }
-        $('#pageHeader').text("").text("USA Today");
+        $('#pageHeader').data("source", "USAToday");
         $('#sourceLogo').attr('src', '/static/img/USAToday.jpeg');
         loadHTML(newsList);
     }
@@ -144,8 +240,7 @@ $(document).ready(function(){
     });
 
 
-// GUARDIAN //
-
+    // GUARDIAN //
     function parseGuardianData(news_articles){
         var newsList = [];
         for (var i = 0; i < news_articles.response.results.length; i++) {
@@ -159,7 +254,7 @@ $(document).ready(function(){
 //                newsArticle.image_url = article.images[0].url;
                 newsList.push(newsArticle);
             }
-        $('#pageHeader').text("").text("The Guardian");
+        $('#pageHeader').data("source", "The Guardian");
         $('#sourceLogo').attr('src', '/static/img/Guardian.jpg');
         loadHTML(newsList);
     }
@@ -182,7 +277,6 @@ $(document).ready(function(){
 
 
     // CRUNCHBASE //
-
     function parseCrunchbaseData(news_articles){
         var newsList = [];
         for (var i = 0; i < news_articles.results.length; i++) {
@@ -196,8 +290,7 @@ $(document).ready(function(){
 //                newsArticle.image_url = article.image.available_sizes[0].1;
                 newsList.push(newsArticle);
             }
-
-        $('#pageHeader').text("").text("Crunchbase");
+        $('#pageHeader').data("source", "Crunchbase");
         $('#sourceLogo').attr('src', '/static/img/crunchbase.jpeg');
         loadHTML(newsList);
         $('#search').html("<input type='text' id='searchTerm' style='margin-left: 15px; width: 200px' placeholder='Search company name'></input>"+
@@ -234,6 +327,10 @@ $(document).ready(function(){
             }
         });
     });
+
+
+
+
 
 
 

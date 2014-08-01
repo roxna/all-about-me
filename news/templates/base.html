@@ -54,17 +54,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="{% url "dashboard" %}" class="navbar-brand">Welcome {{ user.username }}</a>
+                <img src="{% static "img/logo.jpeg" %}" class="navbar-brand" style="width: 30%; height: 30%"/>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        {{ user.username }}<i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{% url "profile" %}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
+                        <li id="profile"><a href="{% url "profile" %}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
+                        <li id="preferences"><a href="{% url "preferences" %}"><i class="fa fa-gear fa-fw"></i> Preferences</a></li>
+                        <li id="favorites"><a href="{% url "favorites" %}"><i class="fa fa-heart fa-fw"></i> Favorites</a></li>
 {#                        <li><a href="{% url "social_logins" %}"><i class="fa fa-gear fa-fw"></i> Social Log Ins</a></li>#}
                         <li class="divider"></li>
                         <li><a href="{% url "logout" %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>

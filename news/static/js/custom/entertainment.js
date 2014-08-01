@@ -8,24 +8,126 @@ $(document).ready(function() {
     var vimeo_api_key = "c833e102672739816c1414409da1b0c1";
 
     function loadImageHTML(content){
+        $('#pageHeader').text("");
         $('#pageBody').html(
-            '<h4 class="panel-title">'+content.title+'</h4>' +
-            '<img src="'+content.url+'"/>'
+            '<h4 class="panel-title" id="title" data-title="'+content.title+'">'+content.title+'</h4>' +
+            '<div id="description" data-description=""></div>' +
+            '<img id="url" data-url="'+content.url+'" src="'+content.url+'"/>'
             );
         }
 
     function loadVideoHTML(content){
+        $('#pageHeader').text("");
         $('#pageBody').html(
-            '<h4 class="panel-title">'+content.title+'</h4><br>' +
-            '<div>'+content.description+'</div>' +
+            '<h4 class="panel-title" id="title" data-title="'+content.title+'">'+content.title+'</h4><br>' +
+            '<div id="description" data-description="'+content.description+'>'+content.description+'</div>' +
             '<video width="640" height="480" controls autoplay>'+
-                '<source src="'+content.url+'"/>'+
+                '<source id="url" data-url="'+content.url+'" src="'+content.url+'"/>'+
             '</video>'
             );
         }
 
-    // XKCD
+    // CHANGE FAVORITES BUTTON ON CLICK //
+    $(document).on('click', '.favorite', function(){
+       $(this).attr('src', '/static/img/non-favorite.jpeg');
+    });
 
+    $(document).on('click', '.not_favorite', function(){
+       $(this).attr('src', '/static/img/favorite.jpeg');
+    });
+
+
+    // ADDS / REMOVES ENTERTAINMENT PIECE FROM FAVORITES ON CLICK ON DASHBOARD PAGES //
+    $(document).on('click', '#favorite-icon-entertainment', function(){
+        favorite_entertainment = {};
+        favorite_entertainment.title = $(this).parents('#pageBody').find('#title').data('title');
+        favorite_entertainment.url = $(this).parents('#pageBody').find('#url').data('url');
+        favorite_entertainment.description = $(this).parents('#pageBody').find('#description').data('description');
+        favorite_entertainment.source = $(this).parents('.row').find('#pageHeader').data('source');
+        favorite_entertainment.origin = '/dashboard/';
+        console.log(favorite_entertainment);
+        if($(this).hasClass("not_favorite")){
+            $.ajax({
+                url: "/add_favorite_entertainment/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_entertainment),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+        }
+        if($(this).hasClass("favorite")){
+            $.ajax({
+                url: "/remove_favorite_entertainment/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_entertainment),
+                success: function(favorite){
+                    console.log(favorite);
+                },
+                error: function(error_message){
+                    console.log(error_message);
+                }
+            });
+
+        }
+        $(this).toggleClass("favorite").toggleClass("not_favorite");
+    });
+
+
+    // ADDS / REMOVES ENTERTAINMENT PIECE FROM FAVORITES ON CLICK ON FAVORITES PAGE //
+    $(document).on('click', '#favorite-icon-entertainment-saved', function(){
+        favorite_entertainment = {};
+        favorite_entertainment.title = $(this).parent().find('#title').data('title');
+        favorite_entertainment.url = $(this).parent().find('#url').data('url');
+        favorite_entertainment.description = $(this).parents('#favoritesBody').find('#description').data('description');
+        favorite_entertainment.source = $(this).parents('#favoritesBody').find('#source').data('source');
+        favorite_entertainment.origin = '/favorites/';
+        console.log(favorite_entertainment);
+        if($(this).hasClass("not_favorite")){
+            $.ajax({
+                url: "/add_favorite_entertainment/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_entertainment),
+                success: function(favorite){
+                    console.log(favorite);
+//                    location.reload();
+                },
+                error: function(error_message){
+                    console.log(error_message);
+//                    location.reload();
+                }
+            });
+        }
+        if($(this).hasClass("favorite")){
+            $.ajax({
+                url: "/remove_favorite_entertainment/",
+                type: "POST",
+                dataType: "html",
+                data: JSON.stringify(favorite_entertainment),
+                success: function(favorite){
+                    console.log(favorite);
+//                    location.reload();
+                },
+                error: function(error_message){
+                    console.log(error_message);
+//                    location.reload();
+                }
+            });
+
+        }
+        $(this).toggleClass("favorite").toggleClass("not_favorite");
+    });
+
+
+    // AJAX REQUESTS FOR ALL ENTERTAINMENT SITES //
+
+    // XKCD
     function parseXKCDData(response){
         var comic = {};
         comic.identifier = response.num;
@@ -34,10 +136,15 @@ $(document).ready(function() {
         comic.published_date = response.year+"-"+response.month+"-"+response.day;
         comic.url = response.img;
 
-        $('#pageHeader').text("XKCD");
+        $('#pageHeader').data("source", "XKCD");
         $('#sourceLogo').attr('src', '/static/img/xkcd.png');
         loadImageHTML(comic);
-        $('#pageBody').append('<br><br><button id="randomComic" class="btn btn-primary">Random Comic</button>');
+        $('#pageBody').append(
+                '<br><br><button id="randomComic" class="btn btn-primary">Random Comic</button>'+
+                '<br><br><p><em> &nbsp Favorite</em>'+
+                    '<img id="favorite-icon-entertainment" class="not_favorite" src="/static/img/non-favorite.jpeg"/>'+
+                '</p>'
+        );
     }
 
 
@@ -72,9 +179,7 @@ $(document).ready(function() {
     });
 
 
-
     // VIMEO
-
     function parseVimeoData(response){
         var video = {};
         video.identifier = response[0].id;
@@ -84,10 +189,15 @@ $(document).ready(function() {
         video.url = response[0].url;
         console.log(video.url);
 
-        $('#pageHeader').text("").text("Vimeo");
+        $('#pageHeader').data("source", "Vimeo");
         $('#sourceLogo').attr('src', '/static/img/vimeo.png');
         loadVideoHTML(video);
-        $('#pageBody').append('<br><br><button id="randomVideo" class="btn btn-primary">Random Video</button>');
+        $('#pageBody').append(
+                '<br><br><button id="randomVideo" class="btn btn-primary">Random Video</button>'+
+                '<br><br><p><em> &nbsp Favorite</em>'+
+                    '<img id="favorite-icon-entertainment" class="not_favorite" src="/static/img/non-favorite.jpeg"/>'+
+                '</p>'
+        );
     }
 
 

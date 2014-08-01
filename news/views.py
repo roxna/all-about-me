@@ -1,14 +1,14 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.debug import sensitive_post_parameters
 from allaboutme.settings import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_SECRET, \
     TWITTER_ACCESS_TOKEN
-from news.forms import LoginForm, RegistrationForm, PreferencesForm, TwitterForm
+from news.forms import RegistrationForm, PreferencesForm, ProfileForm
 from news.models import *
 import tweepy
 
@@ -20,7 +20,7 @@ def home(request):
         register_form = RegistrationForm(request.POST)
         if register_form.is_valid():
             if register_form.save():
-                return redirect("profile")
+                return redirect("preferences")
 
     register_form = RegistrationForm()
     return render(request, 'home.html', {'register_form': register_form})
@@ -40,10 +40,14 @@ def dashboard(request):
         tweets = api.user_timeline('@'+screen_name, count=5)
 
     header = "Dashboard"
+    news = Article.objects.filter(followers=request.user)
+    entertainment = Entertainment.objects.filter(followers=request.user)
     data = {
         'tweets': tweets,
         'header': header,
         'screen_name': screen_name,
+        'news': news,
+        'entertainment': entertainment
         }
 
     return render(request, 'dashboard.html', data)
@@ -59,7 +63,8 @@ def twitter(request):
     screen_name = ""
 
     if request.user.twitter_id:
-        tweets = api.user_timeline('@'+request.user.twitter_id, count=10)
+        tweets = api.user_timeline('@jquery', count=10)
+        # tweets = api.user_timeline('@'+request.user.twitter_id, count=10)
         screen_name = request.user.twitter_id
 
     if request.method == 'POST':
@@ -74,12 +79,111 @@ def twitter(request):
 @login_required
 def profile(request):
     if request.method == "POST":
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("/dashboard")
+    form = ProfileForm(instance=request.user)
+    return render(request, 'profile.html', {'form': form})
+
+
+@login_required
+def preferences(request):
+    if request.method == "POST":
         form = PreferencesForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("/dashboard")
     form = PreferencesForm(instance=request.user)
-    return render(request, 'profile.html', {'form': form})
+    return render(request, 'preferences.html', {'form': form})
+
+
+@login_required
+def favorites(request):
+    favorite_news = Article.objects.filter(followers=request.user)
+    favorite_entertainment = Entertainment.objects.filter(followers=request.user)
+
+    data = {
+        'favorite_news': favorite_news,
+        'favorite_entertainment': favorite_entertainment,
+    }
+    return render(request, 'favorites.html', data)
+
+
+
+# Non-visual views; mainly for POST to DB requests
+
+@csrf_exempt
+@login_required
+def add_favorite_news(request):
+    if request.method == "POST":
+        favorite_news = json.loads(request.body)
+        print favorite_news
+        article = Article.objects.get_or_create(
+            title=favorite_news['title'],
+            abstract=favorite_news['abstract'],
+            web_url=favorite_news['web_url'],
+            source=NewsSource.objects.get(name=favorite_news['source'])
+        )
+        article[0].followers.add(request.user)
+
+        if favorite_news['origin'] == '/favorites/':
+            return render(request, 'favorites.html')
+        else:
+            return HttpResponseRedirect('/dashboard')
+
+
+@csrf_exempt
+@login_required
+def remove_favorite_news(request):
+    if request.method == "POST":
+        favorite_news = json.loads(request.body)
+        article = Article.objects.get(
+            web_url=favorite_news['web_url']
+        )
+        article.followers.remove(request.user)
+        # Article.objects.get(web_url=article.web_url).delete()
+
+        if favorite_news['origin'] == '/favorites/':
+            return render(request, 'favorites.html')
+        else:
+            return HttpResponseRedirect('/dashboard')
+
+
+@csrf_exempt
+@login_required
+def add_favorite_entertainment(request):
+    if request.method == "POST":
+        favorite_entertainment = json.loads(request.body)
+        entertainment = Entertainment.objects.get_or_create(
+            title=favorite_entertainment['title'],
+            url=favorite_entertainment['url'],
+            description=favorite_entertainment['description'],
+            source=EntertainmentSource.objects.get(name=favorite_entertainment['source'])
+        )
+        entertainment[0].followers.add(request.user)
+
+        if favorite_entertainment['origin'] == '/favorites/':
+            return render(request, 'favorites.html')
+        else:
+            return HttpResponseRedirect('/dashboard')
+
+
+@csrf_exempt
+@login_required
+def remove_favorite_entertainment(request):
+    if request.method == "POST":
+        favorite_entertainment = json.loads(request.body)
+        entertainment = Entertainment.objects.get(
+            url=favorite_entertainment['url']
+        )
+        entertainment.followers.remove(request.user)
+
+        if favorite_entertainment['origin'] == '/favorites/':
+            return render(request, 'favorites.html')
+        else:
+            return HttpResponseRedirect('/dashboard')
+
 
 
 # @login_required

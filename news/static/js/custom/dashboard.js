@@ -5,9 +5,11 @@
 
 $(document).ready(function() {
 
-//    $('#dashboard').on('click', function(){
-//        $('#pageHeader').text("Dashboard");
-//        $('#pageBody').html("<div>yooo</div>");
-//    });
+    if(window.location.pathname == '/dashboard/'){
+        $('nav #side-menu').children().css('display', 'block !important');
+    }
+    else{
+        $('nav #side-menu').children().not(':first').hide();
+    }
 
 });
