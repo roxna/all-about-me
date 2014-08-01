@@ -115,13 +115,15 @@ def favorites(request):
 
 
 # Non-visual views; mainly for POST to DB requests
-
+# Should be able to google to see how to have your AJAX queries not be @crsf_exempt
 @csrf_exempt
 @login_required
 def add_favorite_news(request):
     if request.method == "POST":
         favorite_news = json.loads(request.body)
         print favorite_news
+        
+        # can do article, created = Article.objects.get_or_create instead for readability
         article = Article.objects.get_or_create(
             title=favorite_news['title'],
             abstract=favorite_news['abstract'],
