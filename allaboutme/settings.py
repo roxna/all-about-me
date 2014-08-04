@@ -18,7 +18,7 @@
 #
 # # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = '!91%90!nml*n&vfslrvivk5b@-00o$y4q+_2r4&ur*o9%3+khx'
-# 
+#
 # # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 #
@@ -158,7 +158,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '!91%90!nml*n&vfslrvivk5b@-00o$y4q+_2r4&ur*o9%3+khx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
