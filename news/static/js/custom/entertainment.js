@@ -38,6 +38,10 @@ $(document).ready(function() {
     });
 
 
+    // I'm a bit confused why both of these blocks have a favorite and unfavorite clause
+    // Doesn't one add a favorite and one unfavorites?
+    // If that's the case then can't you just unfavorite via the PK of the Entertainment in the DB?
+
     // ADDS / REMOVES ENTERTAINMENT PIECE FROM FAVORITES ON CLICK ON DASHBOARD PAGES //
     $(document).on('click', '#favorite-icon-entertainment', function(){
         favorite_entertainment = {};
