@@ -2,6 +2,7 @@
  * Created by roxnairani on 7/23/14.
  */
 
+// This file could probably be separated out more for readability and organization
 $(document).ready(function(){
 
     var espn_api_key = "8ac49etstvkvnawwndz8g2fa";
@@ -48,6 +49,8 @@ $(document).ready(function(){
        }
     });
 
+    // As mentioned on entertainment.js, there's probably a better way to organize this favoriting code
+    // and probably share it between entertainment.js and news.js. This code looks very similar to the other blocks.
 
     // ADDS / REMOVES A NEWS ARTICLE FROM FAVORITES ON CLICK ON DASHBOARD PAGES//
     $(document).on('click', '#favorite-icon-news', function(){
